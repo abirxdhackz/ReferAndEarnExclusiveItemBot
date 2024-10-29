@@ -1,3 +1,6 @@
+# Author (C) @abirxdhackz
+# Channel : https://t.me/abir_xd_bio
+
 <h1 align="center">Refer And Earn Exclusive Item Bot</h1>
 
 <p align="center">
@@ -66,3 +69,5 @@ Done Bot Will Response
 Feel free to reach out if you have any questions or feedback.
 
 If You Like This Repo Then Give A Star And Feel Free To Share It With Proper Credits.
+# Author (C) @abirxdhackz
+# Channel : https://t.me/abir_xd_bio
