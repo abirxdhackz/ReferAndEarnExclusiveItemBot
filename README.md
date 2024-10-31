@@ -33,7 +33,11 @@
 - The Bot Has Balance Add System
 - The Bot Has BroadCast Option
 - The Bot Is In Python So No Ads In The Bot
-
+- The Bot Has Coupon Gen System
+- The Bot Has Leaderboard Option
+- The Bot Has Command To Ban Users
+- The Bot Has Options To Unban Users
+- The Bot Has Options To Delete User's Balance 
 ## Requirements
 
 Before you begin, ensure you have met the following requirements:
