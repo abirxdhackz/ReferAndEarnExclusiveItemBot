@@ -31,7 +31,7 @@
 - You Can Edit The Full Code As You Wish
 - The Bot Has Admin Panel.
 - The Bot Has Balance Add System
-- The Bot Has Verification Power To Verify Admins Before Adding Balance
+- The Bot Has BroadCast Option
 - The Bot Is In Python So No Ads In The Bot
 
 ## Requirements
