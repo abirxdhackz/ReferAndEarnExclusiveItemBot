@@ -241,6 +241,37 @@ def process_balance_add(message):
     except Exception as e:
         bot.send_message(message.chat.id, f"⚠️ An error occurred: {e}")
 
+# Admin command to broadcast a message
+@bot.message_handler(commands=['broadcast'])
+def broadcast_handler(message):
+    if message.from_user.id not in ADMIN_USER_IDS:
+        bot.send_message(message.chat.id, "⚠️ You don't have permission to use this command.")
+        return
+
+    # Ask for the message to broadcast
+    msg = bot.send_message(message.chat.id, "Please enter the message or send the file to broadcast.")
+    bot.register_next_step_handler(msg, process_broadcast)
+
+# Process the broadcast message or file
+def process_broadcast(message):
+    # Broadcast the received message to all users in total_users
+    for user_id in total_users:
+        try:
+            # Check if the message contains text, photo, document, or video to broadcast
+            if message.content_type == 'text':
+                bot.send_message(user_id, message.text)
+            elif message.content_type == 'photo':
+                bot.send_photo(user_id, message.photo[-1].file_id, caption=message.caption)
+            elif message.content_type == 'document':
+                bot.send_document(user_id, message.document.file_id, caption=message.caption)
+            elif message.content_type == 'video':
+                bot.send_video(user_id, message.video.file_id, caption=message.caption)
+        except Exception as e:
+            print(f"Could not send message to {user_id}: {e}")
+
+    # Notify the admin that the broadcast was successful
+    bot.send_message(message.chat.id, "✅ Broadcast sent to all users.")
+
 
 # Admin reply handler
 @bot.message_handler(func=lambda message: message.reply_to_message and message.reply_to_message.chat.id == GROUP_CHAT_ID)
