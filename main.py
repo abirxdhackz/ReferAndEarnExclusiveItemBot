@@ -4,14 +4,21 @@
 import telebot
 from telebot import types
 import time
+import random
+import string
 
-API_TOKEN = 'API_TOKEN'  # Replace with your bot's API token
+API_TOKEN = 'Api Token'  # Replace with your bot's API token
 bot = telebot.TeleBot(API_TOKEN)
 
 # Sample data storage for user data
 user_data = {}
 total_users = set()  # Store unique users to count total members
 service_requests = {}  # Store mapping of message IDs to user chat IDs
+used_coupons = set()  # Track used coupons
+banned_users = set()  # Track banned users  <-- Added here
+
+# List of valid coupons with 10 points each
+valid_coupons = {}
 
 # Define the admin group chat ID for forwarding messages and replying
 GROUP_CHAT_ID = -1002263161625  # Replace with your group chat ID
@@ -34,19 +41,31 @@ service_points = {
 
 # List of channels to check
 channels_to_check = [
-    "@ModVipRM",
-    "@ModviprmBackup",
-    "@modDirect_download",
+    "@abir_x_official_apps_store",
+    "@abir_x_official_bins",
+    "@abir_x_official_developer",
     "@abir_x_official"
 ]
+
+# Function to generate a unique coupon code
+def generate_coupon_code(length=10):
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+
+# Function to check if a user is banned
+def check_banned(chat_id):
+    if chat_id in banned_users:
+        bot.send_message(chat_id, "🚫 You are banned from using this bot.")
+        return True
+    return False
+
 
 # Function to create the main menu
 def main_menu(chat_id):
     markup = types.InlineKeyboardMarkup()
     join_buttons = [
-        types.InlineKeyboardButton("Main Channel", url="https://t.me/ModVipRM"),
-        types.InlineKeyboardButton("Backup Channel", url="https://t.me/ModviprmBackup"),
-        types.InlineKeyboardButton("Direct Downloads", url="https://t.me/modDirect_download"),
+        types.InlineKeyboardButton("Main Channel", url="https://t.me/abir_x_official_apps_store"),
+        types.InlineKeyboardButton("Backup Channel", url="https://t.me/abir_x_official_bins"),
+        types.InlineKeyboardButton("Direct Downloads", url="https://t.me/abir_x_official_developer"),
         types.InlineKeyboardButton("Developer", url="https://t.me/abir_x_official")
     ]
     joined_button = types.InlineKeyboardButton("Joined", callback_data="joined")
@@ -69,8 +88,10 @@ def check_joined(chat_id):
 @bot.message_handler(commands=['start'])
 def start_handler(message):
     chat_id = message.chat.id
-    referrer_id = message.text.split(" ")[1] if len(message.text.split(" ")) > 1 else None
+    if check_banned(chat_id):
+        return
 
+    referrer_id = message.text.split(" ")[1] if len(message.text.split(" ")) > 1 else None
     if chat_id not in total_users:
         total_users.add(chat_id)
         user_data[chat_id] = {
@@ -97,10 +118,137 @@ def joined_handler(call):
 # Function to display options after joining
 def options_menu(chat_id):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add("🧑‍🤝‍🧑 Refer", "🏆 Redeem", "🎁 Bonus", "📞 Support", "📊 Statistics", "👩‍💻 Account")
+    markup.add("🧑‍🤝‍🧑 Refer", "🏆 Redeem", "🎁 Bonus", "📞 Support", "📊 Statistics", "👩‍💻 Account","⚠️RestorePoints","💸 Coupon","🏅 Leaderboard")
     bot.send_message(chat_id, "Choose an option:", reply_markup=markup)
 
+# Admin command to generate coupons
+@bot.message_handler(commands=['gencoupon'])
+def gencoupon_handler(message):
+    if message.from_user.id not in ADMIN_USER_IDS:
+        bot.send_message(message.chat.id, "⚠️ You don't have permission to use this command.")
+        return
 
+    # Number of coupons to generate
+    num_coupons = 30
+    coupons = {}
+
+    for _ in range(num_coupons):
+        coupon_code = generate_coupon_code()  # Generate a unique coupon code
+        while coupon_code in valid_coupons:  # Ensure the coupon is unique
+            coupon_code = generate_coupon_code()
+        coupons[coupon_code] = 10  # Each coupon is worth 10 points
+
+    # Add generated coupons to the valid_coupons dictionary
+    valid_coupons.update(coupons)
+
+    # Notify admin of the generated coupons
+    coupon_list = "\n".join(coupons.keys())
+    bot.send_message(message.chat.id, f"✅ Generated {num_coupons} coupons successfully!\n\nCoupons:\n{coupon_list}")
+
+# Function to handle the Coupon button
+@bot.message_handler(func=lambda message: message.text == "💸 Coupon")
+def coupon_handler(message):
+    chat_id = message.chat.id
+    msg = bot.send_message(chat_id, "Please enter your coupon code:")
+    bot.register_next_step_handler(msg, process_coupon)
+
+# Process the coupon code input
+def process_coupon(message):
+    chat_id = message.chat.id
+    coupon_code = message.text.strip().upper()  # Normalize input
+
+    if coupon_code in valid_coupons and coupon_code not in used_coupons:
+        # Apply points to user's balance
+        user_data[chat_id]['balance'] += valid_coupons[coupon_code]
+        used_coupons.add(coupon_code)  # Mark the coupon as used
+        bot.send_message(chat_id, f"🎉 Redemption successful! You've received {valid_coupons[coupon_code]} points.")
+    elif coupon_code in used_coupons:
+        bot.send_message(chat_id, "⚠️ This coupon has already been used.")
+    else:
+        bot.send_message(chat_id, "❌ Invalid coupon code. Please try again.")
+
+# Admin command to ban a user
+@bot.message_handler(commands=['ban'])
+def ban_handler(message):
+    if message.from_user.id not in ADMIN_USER_IDS:
+        bot.send_message(message.chat.id, "⚠️ You don't have permission to use this command.")
+        return
+
+    msg = bot.send_message(message.chat.id, "Please enter the user ID to ban:")
+    bot.register_next_step_handler(msg, process_ban)
+
+# Process ban input
+def process_ban(message):
+    try:
+        user_id = int(message.text.strip())
+        banned_users.add(user_id)
+        bot.send_message(message.chat.id, f"✅ User {user_id} has been banned.")
+        bot.send_message(user_id, "🚫 You have been banned from using this bot.")
+    except ValueError:
+        bot.send_message(message.chat.id, "⚠️ Invalid user ID format. Please try again.")
+
+# Admin command to unban a user
+@bot.message_handler(commands=['unban'])
+def unban_handler(message):
+    if message.from_user.id not in ADMIN_USER_IDS:
+        bot.send_message(message.chat.id, "⚠️ You don't have permission to use this command.")
+        return
+
+    msg = bot.send_message(message.chat.id, "Please enter the user ID to unban:")
+    bot.register_next_step_handler(msg, process_unban)
+
+# Process unban input
+def process_unban(message):
+    try:
+        user_id = int(message.text.strip())
+        if user_id in banned_users:
+            banned_users.remove(user_id)
+            bot.send_message(message.chat.id, f"✅ User {user_id} has been unbanned.")
+            bot.send_message(user_id, "🎉 You have been unbanned and can now use the bot again.")
+        else:
+            bot.send_message(message.chat.id, "⚠️ User ID is not banned.")
+    except ValueError:
+        bot.send_message(message.chat.id, "⚠️ Invalid user ID format. Please try again.")
+
+# Admin command to delete user balance
+@bot.message_handler(commands=['delbalance'])
+def delbalance_handler(message):
+    if message.from_user.id not in ADMIN_USER_IDS:
+        bot.send_message(message.chat.id, "⚠️ You don't have permission to use this command.")
+        return
+
+    msg = bot.send_message(message.chat.id, "Please enter the user ID to delete balance:")
+    bot.register_next_step_handler(msg, process_delbalance)
+
+# Process delete balance input
+def process_delbalance(message):
+    try:
+        user_id = int(message.text.strip())
+        if user_id in user_data:
+            user_data[user_id]['balance'] = 0
+            bot.send_message(message.chat.id, f"✅ Balance for user {user_id} has been deleted.")
+            bot.send_message(user_id, "⚠️ Your balance has been reset to 0 by an admin.")
+        else:
+            bot.send_message(message.chat.id, "⚠️ User ID not found.")
+    except ValueError:
+        bot.send_message(message.chat.id, "⚠️ Invalid user ID format. Please try again.")
+
+# Leaderboard button handler
+@bot.message_handler(func=lambda message: message.text == "🏅 Leaderboard")
+def leaderboard_handler(message):
+    chat_id = message.chat.id
+    
+    # Sort users by balance in descending order and retrieve the top 5
+    top_users = sorted(user_data.items(), key=lambda x: x[1]['balance'], reverse=True)[:5]
+    
+    # Format leaderboard message
+    leaderboard_text = "🏅 Top Users by Points:\n\n"
+    for i, (user_id, data) in enumerate(top_users, start=1):
+        user_link = f"<a href='tg://user?id={user_id}'>User {user_id}</a>"
+        leaderboard_text += f"{i}. {user_link} - {data['balance']} points\n"
+    
+    # Send the leaderboard with HTML parse mode to enable links
+    bot.send_message(chat_id, leaderboard_text, parse_mode="HTML")
 
 # Function to handle the Redeem button
 @bot.message_handler(func=lambda message: message.text == "🏆 Redeem")
@@ -183,6 +331,16 @@ def support_handler(message):
     markup.add(support_button)
     bot.send_message(chat_id, "Here is our Support Group. Join for assistance!", reply_markup=markup)
 
+# Function to handle the Restore Point button
+@bot.message_handler(func=lambda message: message.text == "⚠️RestorePoints")
+def support_handler(message):
+    chat_id = message.chat.id
+    markup = types.InlineKeyboardMarkup()
+    support_button = types.InlineKeyboardButton("Send SS Now", url="https://t.me/ModVipRM_Discussion")
+    markup.add(support_button)
+    bot.send_message(chat_id, "Here is our  Group. Send Your User Id From @userinfobot With Your ScreenShort Of How Many Points You Have Before.", reply_markup=markup)
+
+
 # Function to handle the Account button
 @bot.message_handler(func=lambda message: message.text == "👩‍💻 Account")
 def account_handler(message):
@@ -209,7 +367,7 @@ def statistics_handler(message):
     bot.send_message(chat_id, response)
 
 # Admin command to add balance
-@bot.message_handler(commands=['BalanceAdd'])
+@bot.message_handler(commands=['balanceadd'])
 def balance_add_handler(message):
     if message.from_user.id not in ADMIN_USER_IDS:
         bot.send_message(message.chat.id, "⚠️ You don't have permission to use this command.")
