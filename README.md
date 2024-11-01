@@ -37,7 +37,8 @@
 - The Bot Has Leaderboard Option
 - The Bot Has Command To Ban Users
 - The Bot Has Options To Unban Users
-- The Bot Has Options To Delete User's Balance 
+- The Bot Has Options To Delete User's Balance
+- The Bot Will Remind It's Users To Take Bonus
 ## Requirements
 
 Before you begin, ensure you have met the following requirements:
