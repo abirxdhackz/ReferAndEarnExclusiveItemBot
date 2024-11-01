@@ -6,8 +6,10 @@ from telebot import types
 import time
 import random
 import string
+import threading
+from datetime import datetime, timedelta
 
-API_TOKEN = 'Api Token'  # Replace with your bot's API token
+API_TOKEN = '7929844965:AAFY65aQiXn5pu_YC2BhQe2uTYEDFRbaDSY'  # Replace with your bot's API token
 bot = telebot.TeleBot(API_TOKEN)
 
 # Sample data storage for user data
@@ -41,9 +43,10 @@ service_points = {
 
 # List of channels to check
 channels_to_check = [
-    "@abir_x_official_apps_store",
-    "@abir_x_official_bins",
-    "@abir_x_official_developer",
+    "@ModVipRM",
+    "@ModviprmBackup",
+    "@modDirect_download",
+    "@Vipking_71",
     "@abir_x_official"
 ]
 
@@ -63,9 +66,10 @@ def check_banned(chat_id):
 def main_menu(chat_id):
     markup = types.InlineKeyboardMarkup()
     join_buttons = [
-        types.InlineKeyboardButton("Main Channel", url="https://t.me/abir_x_official_apps_store"),
-        types.InlineKeyboardButton("Backup Channel", url="https://t.me/abir_x_official_bins"),
-        types.InlineKeyboardButton("Direct Downloads", url="https://t.me/abir_x_official_developer"),
+        types.InlineKeyboardButton("Main Channel", url="https://t.me/ModVipRM"),
+        types.InlineKeyboardButton("Backup Channel", url="https://t.me/ModviprmBackup"),
+        types.InlineKeyboardButton("Direct Downloads", url="https://t.me/modDirect_download"),
+        types.InlineKeyboardButton("Promo", url="https://t.me/Vipking_71"),
         types.InlineKeyboardButton("Developer", url="https://t.me/abir_x_official")
     ]
     joined_button = types.InlineKeyboardButton("Joined", callback_data="joined")
@@ -166,6 +170,40 @@ def process_coupon(message):
         bot.send_message(chat_id, "⚠️ This coupon has already been used.")
     else:
         bot.send_message(chat_id, "❌ Invalid coupon code. Please try again.")
+
+# Last reminder times for each user
+last_reminder_time = {}
+
+# Function to send reminder to users
+def send_reminder(chat_id):
+    user = user_data.get(chat_id, {'balance': 0})
+    reminder_message = (
+        "💡 Reminder: Don't forget to claim your daily bonus points! 🎁\n\n"
+        "🏆 Redeemable Services:\n"
+    )
+
+    # Adding services and required points dynamically from service_points
+    for service, points in service_points.items():
+        reminder_message += f"🔸 {service} - {points} points\n"
+
+    # Send the reminder message to the user
+    bot.send_message(chat_id, reminder_message)
+
+# Function to check and send reminders
+def check_and_send_reminders():
+    while True:
+        for chat_id in total_users:
+            last_reminder = last_reminder_time.get(chat_id)
+
+            # Send reminder if 24 hours have passed since the last reminder
+            if not last_reminder or datetime.now() - last_reminder >= timedelta(hours=24):
+                send_reminder(chat_id)
+                last_reminder_time[chat_id] = datetime.now()
+
+        time.sleep(3600)  # Check every hour
+
+# Start the background reminder thread
+threading.Thread(target=check_and_send_reminders).start()
 
 # Admin command to ban a user
 @bot.message_handler(commands=['ban'])
