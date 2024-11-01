@@ -9,7 +9,7 @@ import string
 import threading
 from datetime import datetime, timedelta
 
-API_TOKEN = '7929844965:AAFY65aQiXn5pu_YC2BhQe2uTYEDFRbaDSY'  # Replace with your bot's API token
+API_TOKEN = '7726534009:AAFyem3q10Xr-r9btWHzdNCtXophdr5jNsM'  # Replace with your bot's API token
 bot = telebot.TeleBot(API_TOKEN)
 
 # Sample data storage for user data
@@ -19,8 +19,13 @@ service_requests = {}  # Store mapping of message IDs to user chat IDs
 used_coupons = set()  # Track used coupons
 banned_users = set()  # Track banned users  <-- Added here
 
-# List of valid coupons with 10 points each
+# Dictionary to store valid coupon codes and their points
 valid_coupons = {}
+
+
+# Function to generate a unique coupon code
+def generate_coupon_code(length=10):
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
 # Define the admin group chat ID for forwarding messages and replying
 GROUP_CHAT_ID = -1002263161625  # Replace with your group chat ID
@@ -34,7 +39,7 @@ service_points = {
     "Canva": 3,
     "HoichoiChorki": 30,
     "VPN": 6,
-    "WhatsApp Number": 30,
+    "WhatsApp Number": 15,
     "Apple Music": 15,
     "Chruncyroll": 10,
     "YouTube Premium": 8,
@@ -43,16 +48,10 @@ service_points = {
 
 # List of channels to check
 channels_to_check = [
-    "@ModVipRM",
-    "@ModviprmBackup",
-    "@modDirect_download",
-    "@Vipking_71",
-    "@abir_x_official"
+    "@abir_x_official",
+    "@abir_x_official_developer"   
 ]
 
-# Function to generate a unique coupon code
-def generate_coupon_code(length=10):
-    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
 # Function to check if a user is banned
 def check_banned(chat_id):
@@ -66,11 +65,8 @@ def check_banned(chat_id):
 def main_menu(chat_id):
     markup = types.InlineKeyboardMarkup()
     join_buttons = [
-        types.InlineKeyboardButton("Main Channel", url="https://t.me/ModVipRM"),
-        types.InlineKeyboardButton("Backup Channel", url="https://t.me/ModviprmBackup"),
-        types.InlineKeyboardButton("Direct Downloads", url="https://t.me/modDirect_download"),
-        types.InlineKeyboardButton("Promo", url="https://t.me/Vipking_71"),
-        types.InlineKeyboardButton("Developer", url="https://t.me/abir_x_official")
+        types.InlineKeyboardButton("Main Channel", url="https://t.me/abir_x_official_developer"),
+        types.InlineKeyboardButton("Backup Channel", url="https://t.me/abir_x_official")
     ]
     joined_button = types.InlineKeyboardButton("Joined", callback_data="joined")
     markup.add(*join_buttons)
@@ -125,46 +121,109 @@ def options_menu(chat_id):
     markup.add("🧑‍🤝‍🧑 Refer", "🏆 Redeem", "🎁 Bonus", "📞 Support", "📊 Statistics", "👩‍💻 Account","⚠️RestorePoints","💸 Coupon","🏅 Leaderboard")
     bot.send_message(chat_id, "Choose an option:", reply_markup=markup)
 
-# Admin command to generate coupons
+# Dictionary to store temporary data for the admin generating coupons
+temp_coupon_data = {}
+
+# Updated admin command to generate coupons with specified amount and points
 @bot.message_handler(commands=['gencoupon'])
 def gencoupon_handler(message):
     if message.from_user.id not in ADMIN_USER_IDS:
         bot.send_message(message.chat.id, "⚠️ You don't have permission to use this command.")
         return
+    
+    # Ask admin for the number of coupons to generate
+    msg = bot.send_message(message.chat.id, "Please enter the number of coupons to generate:")
+    bot.register_next_step_handler(msg, process_coupon_quantity, message.from_user.id)
 
-    # Number of coupons to generate
-    num_coupons = 30
-    coupons = {}
+# Step 1: Process the number of coupons
+def process_coupon_quantity(message, admin_id):
+    try:
+        num_coupons = int(message.text.strip())
+        if num_coupons <= 0:
+            bot.send_message(message.chat.id, "⚠️ Please enter a valid number of coupons.")
+            return
 
-    for _ in range(num_coupons):
-        coupon_code = generate_coupon_code()  # Generate a unique coupon code
-        while coupon_code in valid_coupons:  # Ensure the coupon is unique
+        # Store the number of coupons in the temp data dictionary
+        temp_coupon_data[admin_id] = {'num_coupons': num_coupons}
+        
+        # Ask for the points per coupon
+        msg = bot.send_message(message.chat.id, "Please enter the points for each coupon:")
+        bot.register_next_step_handler(msg, process_coupon_points, admin_id)
+    except ValueError:
+        bot.send_message(message.chat.id, "⚠️ Invalid input. Please enter a valid number.")
+
+# Step 2: Process the points per coupon and generate coupons
+def process_coupon_points(message, admin_id):
+    try:
+        points_per_coupon = int(message.text.strip())
+        if points_per_coupon <= 0:
+            bot.send_message(message.chat.id, "⚠️ Please enter a valid point value.")
+            return
+        
+        # Retrieve the number of coupons from temp data
+        num_coupons = temp_coupon_data[admin_id]['num_coupons']
+        coupons = {}
+
+        # Generate the specified number of unique coupons with the specified points
+        for _ in range(num_coupons):
             coupon_code = generate_coupon_code()
-        coupons[coupon_code] = 10  # Each coupon is worth 10 points
+            while coupon_code in valid_coupons:
+                coupon_code = generate_coupon_code()
+            coupons[coupon_code] = points_per_coupon
 
-    # Add generated coupons to the valid_coupons dictionary
-    valid_coupons.update(coupons)
+        # Add generated coupons to the valid coupons dictionary
+        valid_coupons.update(coupons)
+        
+        # Clean up temp data for this admin
+        del temp_coupon_data[admin_id]
+        
+        # Notify admin of the generated coupons
+        coupon_list = "\n".join(coupons.keys())
+        bot.send_message(
+            message.chat.id,
+            f"✅ Successfully generated {num_coupons} coupons with {points_per_coupon} points each!\n\nCoupons:\n{coupon_list}"
+        )
+        
+    except ValueError:
+        bot.send_message(message.chat.id, "⚠️ Invalid input. Please enter a valid point value.")
 
-    # Notify admin of the generated coupons
-    coupon_list = "\n".join(coupons.keys())
-    bot.send_message(message.chat.id, f"✅ Generated {num_coupons} coupons successfully!\n\nCoupons:\n{coupon_list}")
 
 # Function to handle the Coupon button
 @bot.message_handler(func=lambda message: message.text == "💸 Coupon")
 def coupon_handler(message):
     chat_id = message.chat.id
+    
+    # Ensure the user has an entry in user_data
+    if chat_id not in user_data:
+        user_data[chat_id] = {'balance': 0, 'invited_users': 0, 'bonus_claimed': False, 'last_coupon_time': None}
+
+    # Check if 24 hours have passed since the last redemption
+    last_coupon_time = user_data[chat_id].get('last_coupon_time')
+    if last_coupon_time and datetime.now() - last_coupon_time < timedelta(hours=24):
+        remaining_time = timedelta(hours=24) - (datetime.now() - last_coupon_time)
+        hours, remainder = divmod(remaining_time.seconds, 3600)
+        minutes = remainder // 60
+        bot.send_message(chat_id, f"⚠️ You have already redeemed a coupon within the last 24 hours. Please wait {hours} hours and {minutes} minutes to redeem again.")
+        return
+
+    # If 24 hours have passed or the user has never redeemed before, proceed to ask for coupon code
     msg = bot.send_message(chat_id, "Please enter your coupon code:")
     bot.register_next_step_handler(msg, process_coupon)
 
-# Process the coupon code input
+# Process the coupon code input with 24-hour restriction
 def process_coupon(message):
     chat_id = message.chat.id
     coupon_code = message.text.strip().upper()  # Normalize input
+
+    # Ensure the user exists in user_data with a balance field
+    if chat_id not in user_data:
+        user_data[chat_id] = {'balance': 0, 'invited_users': 0, 'bonus_claimed': False, 'last_coupon_time': None}
 
     if coupon_code in valid_coupons and coupon_code not in used_coupons:
         # Apply points to user's balance
         user_data[chat_id]['balance'] += valid_coupons[coupon_code]
         used_coupons.add(coupon_code)  # Mark the coupon as used
+        user_data[chat_id]['last_coupon_time'] = datetime.now()  # Record the redemption time
         bot.send_message(chat_id, f"🎉 Redemption successful! You've received {valid_coupons[coupon_code]} points.")
     elif coupon_code in used_coupons:
         bot.send_message(chat_id, "⚠️ This coupon has already been used.")
