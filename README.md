@@ -39,6 +39,8 @@
 - The Bot Has Options To Unban Users
 - The Bot Has Options To Delete User's Balance
 - The Bot Will Remind It's Users To Take Bonus
+- The Bot Will Restrict User From Using A New Coupon For 24 Hrs If He Used Already
+- The Bot Can Generate Specific Coupons And Specific Balance Coupon
 ## Requirements
 
 Before you begin, ensure you have met the following requirements:
