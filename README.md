@@ -1,80 +1,82 @@
-# Author (C) @abirxdhackz
-# Channel : https://t.me/abir_xd_bio
+ **Refer and Earn Exclusive Item Bot**:
 
-<h1 align="center">Refer And Earn Exclusive Item Bot</h1>
+---
+
+<h1 align="center">🎁 Refer and Earn Exclusive Item Bot 🎁</h1>
 
 <p align="center">
- <a href="https://twitter.com/abirthedigital" target="blank">
-        <img src="https://img.shields.io/badge/Twitter-1DA1F2?style=flat-square&logo=twitter&logoColor=white" alt="abirthedigital" />
-    </a>
-    <a href="https://fb.com/abir360techsavvybhai" target="blank">
-        <img src="https://img.shields.io/badge/Facebook-1877F2?style=flat-square&logo=facebook&logoColor=white" alt="abir360techsavvybhai" />
-    </a>
-    <a href="https://instagram.com/abirthedigitalguru" target="blank">
-        <img src="https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=instagram&logoColor=white" alt="abirthedigitalguru" />
-    </a>
-    <a href="https://t.me/abir_xd_bio" target="blank">
-        <img src="https://img.shields.io/badge/Telegram-0088cc?style=flat-square&logo=telegram&logoColor=white" alt="abir_xd_bio" />
-    </a>
-    <a href="https://www.youtube.com/@AbirTheDigitalGuru" target="blank">
-        <img src="https://img.shields.io/badge/YouTube-FF0000?style=flat-square&logo=youtube&logoColor=white" alt="AbirTheDigitalGuru" />
-    </a>
+ <a href="https://twitter.com/abirthedigital" target="_blank">
+    <img src="https://img.shields.io/badge/Twitter-1DA1F2?style=flat-square&logo=twitter&logoColor=white" alt="Twitter"/>
+ </a>
+ <a href="https://fb.com/abir360techsavvybhai" target="_blank">
+    <img src="https://img.shields.io/badge/Facebook-1877F2?style=flat-square&logo=facebook&logoColor=white" alt="Facebook"/>
+ </a>
+ <a href="https://instagram.com/abirthedigitalguru" target="_blank">
+    <img src="https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=instagram&logoColor=white" alt="Instagram"/>
+ </a>
+ <a href="https://t.me/abir_xd_bio" target="_blank">
+    <img src="https://img.shields.io/badge/Telegram-0088cc?style=flat-square&logo=telegram&logoColor=white" alt="Telegram"/>
+ </a>
+ <a href="https://www.youtube.com/@AbirTheDigitalGuru" target="_blank">
+    <img src="https://img.shields.io/badge/YouTube-FF0000?style=flat-square&logo=youtube&logoColor=white" alt="YouTube"/>
+ </a>
 </p>
 
 <p align="center">
-  <em>By This Bot You Can Get Premium Accounts Like Netflix,PrimeVideo,ChruncyRoll,AppleMusic,Canva,Hoichoi,Chorki,VPN,WhatsApp,Telegram,Capcut And So On</em>
+  <em>With this bot, you can earn premium accounts like Netflix, Prime Video, Crunchyroll, Apple Music, Canva, and more through a refer-and-earn system!</em>
 </p>
 <hr>
 
-## Features
+## 🌟 Features
 
-- You Can Edit The Full Code As You Wish
-- The Bot Has Admin Panel.
-- The Bot Has Balance Add System
-- The Bot Has BroadCast Option
-- The Bot Is In Python So No Ads In The Bot
-- The Bot Has Coupon Gen System
-- The Bot Has Leaderboard Option
-- The Bot Has Command To Ban Users
-- The Bot Has Options To Unban Users
-- The Bot Has Options To Delete User's Balance
-- The Bot Will Remind It's Users To Take Bonus
-- The Bot Will Restrict User From Using A New Coupon For 24 Hrs If He Used Already
-- The Bot Can Generate Specific Coupons And Specific Balance Coupon
-## Requirements
+- **Customizable Code**: Modify the code to suit your requirements.
+- **Admin Panel**: Full control over the bot.
+- **Balance Management**: Add balance to user accounts.
+- **Broadcast Messaging**: Send updates to all users.
+- **Ad-Free Experience**: Written in Python, with no ads.
+- **Coupon Generation**: Generate coupons with specific balances.
+- **Leaderboard**: See top referrers.
+- **User Ban & Unban**: Manage users as necessary.
+- **Balance Reset**: Delete user balance if required.
+- **Bonus Reminder**: Bot reminds users to claim bonuses.
+- **Coupon Usage Restriction**: Prevent users from redeeming a new coupon within 24 hours if they’ve already used one.
+- **Specific Coupon Generation**: Generate targeted coupons for specific balances.
 
-Before you begin, ensure you have met the following requirements:
+## 🛠️ Requirements
 
-- Python 3.6 or higher.
+Ensure you have the following:
+
+- **Python 3.6** or higher.
 - `pyTelegramBotAPI 4.23.0` library.
-- A Telegram bot token (you can get one from [@BotFather](https://t.me/BotFather) on Telegram).
+- **Telegram Bot Token**: Obtain one from [@BotFather](https://t.me/BotFather) on Telegram.
 
-## Installation On Pella.App
+## 🚀 Installation on Pella.App
 
-To install necessary utilities, run the following commands:
+Follow these steps for deployment:
 
-Open Pella.App
-Click On Signup
-Then Choose Create Option 
-Then Right Click On The main.py File And Zip It Like main.zip
-Then Upload It To Pella.App 
-Done Bot Will Response
-## Configuration
+1. Sign up on **Pella.App**.
+2. Select the **Create** option.
+3. Right-click on your `main.py` file and zip it as `main.zip`.
+4. Upload `main.zip` to **Pella.App**.
+5. Your bot should now be live and responsive!
 
-1. Open the script with your favorite text editor.
-2. Find the line that contains `API_TOKEN = '123456:ABCDEFGHIJLLJOdMttZ5hEZ78'`.
-3. Replace the placeholder token with your actual Telegram bot token.
+## 🔧 Configuration
 
+1. Open the script in a text editor.
+2. Locate the line: `API_TOKEN = '123456:ABCDEFGHIJLLJOdMttZ5hEZ78'`.
+3. Replace the placeholder with your actual Telegram bot token from [@BotFather](https://t.me/BotFather).
 
+---
 
-✨ **Note**: Editing A Few Of The Code Does Not Make You Developer So Give Proper Credit To The Real Creator 
-## Author
+> ✨ **Note**: Minor edits to the code do not make you the developer. Always give proper credit to the original creator.
 
-- Name: Abir XD
-- Telegram: [@abir_xd_bio](https://t.me/abir_x_official)
+## 📇 Author
 
-Feel free to reach out if you have any questions or feedback.
+- **Name**: Abir XD
+- **Telegram**: [@abir_x_official](https://t.me/abir_x_official)
 
-If You Like This Repo Then Give A Star And Feel Free To Share It With Proper Credits.
-# Author (C) @abirxdhackz
-# Channel : https://t.me/abir_xd_bio
+Feel free to reach out with any questions or feedback!
+
+If you enjoy this project, please give it a star ⭐ and share it with others while crediting the creator.
+
+---
