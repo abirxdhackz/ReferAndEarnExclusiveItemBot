@@ -1,4 +1,4 @@
- **Refer and Earn Exclusive Item Bot**:
+Here’s a detailed `README.md` structured as requested, including a list of all bot features and admin commands.
 
 ---
 
@@ -23,60 +23,87 @@
 </p>
 
 <p align="center">
-  <em>With this bot, you can earn premium accounts like Netflix, Prime Video, Crunchyroll, Apple Music, Canva, and more through a refer-and-earn system!</em>
+  <em>With this bot, you can earn premium accounts like Nord VPN, Prime Video, Capcut, Canva, and more through a refer-and-earn system!</em>
 </p>
 <hr>
 
 ## 🌟 Features
 
-- **Customizable Code**: Modify the code to suit your requirements.
-- **Admin Panel**: Full control over the bot.
-- **Balance Management**: Add balance to user accounts.
-- **Broadcast Messaging**: Send updates to all users.
-- **Ad-Free Experience**: Written in Python, with no ads.
-- **Coupon Generation**: Generate coupons with specific balances.
-- **Leaderboard**: See top referrers.
-- **User Ban & Unban**: Manage users as necessary.
-- **Balance Reset**: Delete user balance if required.
-- **Bonus Reminder**: Bot reminds users to claim bonuses.
-- **Coupon Usage Restriction**: Prevent users from redeeming a new coupon within 24 hours if they’ve already used one.
-- **Specific Coupon Generation**: Generate targeted coupons for specific balances.
+- **Refer and Earn**: Users earn points by referring others and can redeem premium services.
+- **Daily Bonus**: Users claim bonus points daily to boost their balance.
+- **Leaderboard**: View the top users with the highest points.
+- **Account Redemption**: Users redeem points for access to services like Prime Video, Apple Music, and more.
+- **24-Hour Coupon Restriction**: Users can redeem only once every 24 hours, preventing overuse.
+- **Invite Tracking**: Keep track of successful referrals to award points.
+- **Admin Controls**: Full control panel for bot admins to manage users, points, and messages.
+- **Balance Management**: Admins add, delete, or reset points for any user.
+- **User Ban & Unban**: Manage user access to the bot by banning or unbanning.
+- **Coupon Generation**: Generate custom coupons with specific point values.
+- **Broadcast Messaging**: Send announcements or updates to all users.
+- **Join Verification**: Verifies that users have joined the required channels before accessing bot features.
+- **24/7 Support**: Direct users to the support group for help.
 
 ## 🛠️ Requirements
 
-Ensure you have the following:
-
-- **Python 3.6** or higher.
-- `pyTelegramBotAPI 4.23.0` library.
-- **Telegram Bot Token**: Obtain one from [@BotFather](https://t.me/BotFather) on Telegram.
+- **Python 3.6** or higher
+- **pyTelegramBotAPI 4.23.0**
+- **Telegram Bot Token**: Obtain from [BotFather](https://t.me/BotFather)
 
 ## 🚀 Installation on Pella.App
 
-Follow these steps for deployment:
-
-1. Sign up on **Pella.App**.
+1. **Sign up** on Pella.App.
 2. Select the **Create** option.
-3. Right-click on your `main.py` file and zip it as `main.zip`.
-4. Upload `main.zip` to **Pella.App**.
-5. Your bot should now be live and responsive!
+3. **Zip your project**: Right-click on `main.py` and `accounts.json` to create a zip file named `main.zip`.
+4. **Upload `main.zip`** to Pella.App.
+5. **Deploy**: Your bot will be live and responsive!
 
 ## 🔧 Configuration
 
-1. Open the script in a text editor.
-2. Locate the line: `API_TOKEN = '123456:ABCDEFGHIJLLJOdMttZ5hEZ78'`.
-3. Replace the placeholder with your actual Telegram bot token from [@BotFather](https://t.me/BotFather).
+1. Open `main.py`.
+2. Replace `API_TOKEN = '123456:ABCDEF'` with your actual bot token from [BotFather](https://t.me/BotFather).
+3. Set your `ADMIN_USER_IDS` with your Telegram user ID for admin privileges.
+4. Set Your accounts.json file with your accounts 
 
 ---
 
-> ✨ **Note**: Minor edits to the code do not make you the developer. Always give proper credit to the original creator.
+## 🔑 Admin Commands
+
+The bot offers a range of admin commands for full control:
+
+- **/ban** – Ban a user by their user ID.
+- **/unban** – Unban a previously banned user.
+- **/balanceadd** – Add points to a user’s balance. Format: `/balanceadd points user_id`
+- **/delbalance** – Delete a user’s balance, resetting it to zero.
+- **/broadcast** – Broadcast a message or file to all users.
+- **/gencoupon** – Generate multiple coupons with specified points and quantity.
+- **/check** – Check a user’s current balance.
+- **/leaderboard** – View the leaderboard showing top users by points.
+
+## 📋 User Commands and Options
+
+Users can access several commands and interactive features to engage with the bot:
+
+- **/start** – Initialize the bot and check for required channel membership.
+- **Refer and Earn** (`🧑‍🤝‍🧑 Refer`) – Get an invite link to share with friends. Each referral earns points.
+- **Redeem Points** (`🏆 Redeem`) – Use earned points to redeem accounts for services like Nord VPN, Crunchyroll, and more.
+- **Daily Bonus** (`🎁 Bonus`) – Claim a daily bonus for free points.
+- **Account Information** (`👩‍💻 Account`) – View account details, including balance and referral count.
+- **Statistics** (`📊 Statistics`) – View bot statistics, such as total members and creator info.
+- **Leaderboard** (`🏅 Leaderboard`) – See the top users by points.
+- **Support** (`📞 Support`) – Directs to the support group for help and inquiries.
+- **Restore Points** (`⚠️RestorePoints`) – Users can request to restore points with verification.
+
+---
+
+> ✨ **Note**: Modifications to this bot should credit the original creator.
+
+---
 
 ## 📇 Author
 
 - **Name**: Abir XD
 - **Telegram**: [@abir_x_official](https://t.me/abir_x_official)
 
-Feel free to reach out with any questions or feedback!
-
-If you enjoy this project, please give it a star ⭐ and share it with others while crediting the creator.
+If you enjoy this project, please star it ⭐ and share it with others, giving credit to the creator.
 
 ---
